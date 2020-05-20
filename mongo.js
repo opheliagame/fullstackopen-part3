@@ -12,7 +12,6 @@ else {
         name: String,
         phone: String,
     })
-    
     const Person = mongoose.model('Person', personSchema)
 
     if(process.argv.length === 3) {
@@ -26,13 +25,12 @@ else {
     }
     else if(process.argv.length === 5) {
         const name = process.argv[3]
-        const phone = process.argv[4]    
+        const phone = process.argv[4]
 
         const person = new Person({
             name: name,
             phone: phone,
         })
-        
         person.save().then(result => {
             console.log(`added ${result.name} number ${result.phone} to phonebook`)
             mongoose.connection.close()

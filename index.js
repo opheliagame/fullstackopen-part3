@@ -10,7 +10,7 @@ const cors = require('cors')
 app.use(cors())
 
 const morgan = require('morgan')
-morgan.token('body', (req, res) => {
+morgan.token('body', (req) => {
     const body = JSON.stringify(req.body)
     if(body === JSON.stringify({})) {
         return ''
@@ -33,21 +33,21 @@ app.get('/api/persons', (req, res) => {
 // GET ONE PERSON IN THE PHONEBOOK
 app.get('/api/persons/:id', (req, res, next) => {
     Person.findById(req.params.id)
-    .then(person => {
-        if(person) {
-            res.json(person)
-        }
-        else {
-            res.status(404).end()
-        }
-    })
-    .catch(error => next(error))
+        .then(person => {
+            if(person) {
+                res.json(person)
+            }
+            else {
+                res.status(404).end()
+            }
+        })
+        .catch(error => next(error))
 })
 
 // DELETE A PERSON FROM THE PHONEBOOK
 app.delete('/api/persons/:id', (req, res, next) => {
     Person.findByIdAndRemove(req.params.id)
-        .then(result => {
+        .then(() => {
             res.status(204).end()
         })
         .catch(error => next(error))
@@ -67,13 +67,13 @@ app.post('/api/persons', (req, res, next) => {
     })
 
     person.save()
-    .then(savedPerson => {
-        res.json(savedPerson)
-    })
-    .catch(error => next(error))
+        .then(savedPerson => {
+            res.json(savedPerson)
+        })
+        .catch(error => next(error))
 })
 
-// UPDATE AN EXISTING PERSON 
+// UPDATE AN EXISTING PERSON
 app.put('/api/persons/:id', (req, res, next) => {
     const body = req.body
     const person = {
@@ -81,7 +81,7 @@ app.put('/api/persons/:id', (req, res, next) => {
         phone: body.phone,
     }
 
-    Person.findByIdAndUpdate(req.params.id, person, {new: true, runValidators: true, context: 'query'})
+    Person.findByIdAndUpdate(req.params.id, person, { new: true, runValidators: true, context: 'query' })
         .then(updatedPerson => {
             res.json(updatedPerson)
         })
@@ -93,9 +93,8 @@ app.get('/info', (req, res) => {
         .then(result => {
             const info = `Phonebook has info for ${result.length} people`
             const date = Date(Date.now())
-            res.send(info + "\n" + date)
+            res.send(info + '\n' + date)
         })
-    
 })
 
 const errorHandler = (error, req, res, next) => {
@@ -112,7 +111,7 @@ const errorHandler = (error, req, res, next) => {
 
 app.use(errorHandler)
 
-const PORT = process.env.PORT    
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log('Server is running on port ', PORT)
 })
